@@ -11,9 +11,12 @@
 #include <sscanf2>
 #include <samp_bcrypt>
 #include <cef>
+#include <easyDialog>
 
 #define INTERFACE_BROWSER_ID 0xABCDE
 #define INTERFACE_BROWSER_URL "http://localhost:3000"
+
+#define forex(%0,%1) for(new %0 = 0; %0 != %1; %0++)
 
 #include "modules/include"
 
@@ -25,6 +28,15 @@ public OnGameModeInit()
 {
     DatabaseConnection();
     cef_subscribe("ui:createCharacter", "authOnCreateCharacter");
+
+    //B
+    cef_subscribe("ui:closeSkinMenuList", "skinOnCloseMenu");
+    cef_subscribe("ui:previewSkinList", "skinOnPreviewSkinList");
+    cef_subscribe("ui:applySkinList", "skinOnApplySkinList");
+    cef_subscribe("ui:deleteSkinList", "skinOnDeleteSkinList");
+    cef_subscribe("ui:buyOutfitList", "skinOnBuyOutfitList");
+    cef_subscribe("ui:saveOutfitList", "skinOnSaveOutfitList");
+
     cef_subscribe("ui:selectSkin", "skinOnSelectSkin");
     cef_subscribe("ui:closeSkinMenu", "skinOnCloseMenu");
     cef_subscribe("ui:applySkin", "skinOnApplySkin");

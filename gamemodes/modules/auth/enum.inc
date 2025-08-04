@@ -13,12 +13,14 @@ enum pd_data {
     pdGender[7],
     pdBirtDay[64],
     pdAge,
+    Float:pdPos[3],
+    pdVirtualID,
+    pdWorldID,
 
-    pdSkin,
-    pdHat,
-    pdGlasses,
-    pdMask,
-    pdBackpack,
+    pdSkinAtive,
+
+    //not saved
+    pdSkinIDLast,
 }
 
 new pUserD[MAX_PLAYERS][pd_data];

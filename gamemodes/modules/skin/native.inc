@@ -1,24 +1,19 @@
-stock showSkinMenu(playerid, bool:whitskin)
-{
-    new jsonFormat[128];
-    format(jsonFormat, sizeof(jsonFormat),
-        "{\"whitskin\":%s,\"gender\":\"%s\"}",
-        whitskin ? "true" : "false",
-        "Male"
-    );
-    cef_emit_event(playerid, "ui:showSkinMenu", CEFSTR(jsonFormat));
+stock showSkinMenu(playerid)
+{   
+    cef_emit_event(playerid, "ui:showSkinMenuList", CEFSTR(pUser[playerid][pIdentifier]));
     cef_focus_browser(playerid, INTERFACE_BROWSER_ID, true);
-    return 1;
-}
+    TogglePlayerControllable(playerid, false);
+    
+    new Float:x, Float:y, Float:z, Float:angle;
+    GetPlayerPos(playerid, x, y, z);
+    GetPlayerFacingAngle(playerid, angle);
 
-CMD:skin(playerid, params[])
-{
-    showSkinMenu(playerid, true);
-    return 1;
-}
+    new Float:camX = x + 5.0 * floatsin(-angle, degrees);
+    new Float:camY = y + 5.0 * floatcos(-angle, degrees);
+    new Float:camZ = z + 0.5;
 
-CMD:skindev(playerid, params[])
-{
-    cef_toggle_dev_tools(playerid, INTERFACE_BROWSER_ID, true);
+    SetPlayerCameraPos(playerid, camX, camY, camZ);
+    SetPlayerCameraLookAt(playerid, x, y, z);
+    
     return 1;
 }

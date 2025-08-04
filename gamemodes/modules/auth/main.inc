@@ -13,9 +13,7 @@ public authOnLauncherTokenCheck(playerid)
 {
     new rows = cache_num_rows();
     if(rows) {
-        new query[256];
-        mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `launchertoken` WHERE `identifier` = '%s'", pUser[playerid][pName]);
-        mysql_tquery(g_SQL, query, "authOnTokenValid", "d", playerid);
+        authOnTokenValid(playerid);
     }
     else {
         authKickPlayerWithMessage(playerid, "Silakan Login Mengunak Launcher District Roleplay!\nJika belum memiliki akun, silakan buat akun di https://districtroleplay.com");
@@ -24,8 +22,7 @@ public authOnLauncherTokenCheck(playerid)
     return 1;   
 }
 
-forward authOnTokenValid(playerid);
-public authOnTokenValid(playerid)
+stock authOnTokenValid(playerid)
 {
     SetSpawnInfo(playerid, NO_TEAM, 1, -2415.8567, -593.8060, 132.7245, 259.7749, t_WEAPON:0, 0, t_WEAPON:0, 0, t_WEAPON:0, 0);
     SpawnPlayer(playerid);  
@@ -78,15 +75,107 @@ public authOnCharacterData(playerid)
         // set nama karakter
         SetRpName(playerid, pUserD[playerid][pdFirstName], pUserD[playerid][pdLastName]);
         cache_get_value_name(0, "birthday", pUserD[playerid][pdBirtDay], 64);
-        cache_get_value_name(0, "age", pUserD[playerid][pdAge]);
+        cache_get_value_name_int(0, "age", pUserD[playerid][pdAge]);
         cache_get_value_name(0, "sex", pUserD[playerid][pdGender], 7);
 
-        SetSpawnInfo(playerid, NO_TEAM, 1, -2415.8567, -593.8060, 132.7245, 259.7749, t_WEAPON:0, 0, t_WEAPON:0, 0, t_WEAPON:0, 0);
-        SpawnPlayer(playerid);  
-        SetPlayerVirtualWorld(playerid, 0);
-        SetCameraBehindPlayer(playerid);
+        //other
+        cache_get_value_name_float(0, "posx", pUserD[playerid][pdPos][0]);
+        cache_get_value_name_float(0, "posy", pUserD[playerid][pdPos][1]);
+        cache_get_value_name_float(0, "posz", pUserD[playerid][pdPos][2]);
+        cache_get_value_name_int(0, "virtualid", pUserD[playerid][pdVirtualID]);
+        cache_get_value_name_int(0, "worldid", pUserD[playerid][pdWorldID]);
+
+        // GET SKIN DATA
+        new query[256];
+        mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `krakterskinsaved` WHERE `identifier` = '%s' AND `ative` = 1", pUser[playerid][pIdentifier]);
+        mysql_tquery(g_SQL, query, "authOnCharacterSkinData", "d", playerid);
+
     }
     return 1;
+}
+
+forward authOnCharacterSkinData(playerid);
+public authOnCharacterSkinData(playerid)
+{
+    new rows = cache_num_rows();
+    if(rows) {
+        new SqlID;
+        cache_get_value_name_int(0, "id", SqlID);
+        pSkin[playerid][pSqlID] = SqlID;
+        pUserD[playerid][pdSkinAtive] = SqlID;
+        cache_get_value_name(0, "name", pSkin[playerid][pSkinName], 32);
+        cache_get_value_name_int(0, "ative", pSkin[playerid][pSkinActive]);
+        cache_get_value_name_int(0, "skin", pSkin[playerid][pSkinID]);
+        cache_get_value_name_int(0, "hat", pSkin[playerid][pSkinHat]);
+        cache_get_value_name_float(0, "hatposX", pSkin[playerid][pSkinHatPos][0]);
+        cache_get_value_name_float(0, "hatposY", pSkin[playerid][pSkinHatPos][1]);
+        cache_get_value_name_float(0, "hatposZ", pSkin[playerid][pSkinHatPos][2]);
+        cache_get_value_name_float(0, "hatrotX", pSkin[playerid][pSkinHatPos][3]);
+        cache_get_value_name_float(0, "hatrotY", pSkin[playerid][pSkinHatPos][4]);
+        cache_get_value_name_float(0, "hatrotZ", pSkin[playerid][pSkinHatPos][5]);
+        cache_get_value_name_float(0, "hatscaleX", pSkin[playerid][pSkinHatPos][5]);
+        cache_get_value_name_float(0, "hatscaleY", pSkin[playerid][pSkinHatPos][6]);
+        cache_get_value_name_float(0, "hatscaleZ", pSkin[playerid][pSkinHatPos][7]);
+        cache_get_value_name_int(0, "glasses", pSkin[playerid][pSkinGlasses]);
+        cache_get_value_name_float(0, "glassesposX", pSkin[playerid][pSkinGlassesPos][0]);
+        cache_get_value_name_float(0, "glassesposY", pSkin[playerid][pSkinGlassesPos][1]);
+        cache_get_value_name_float(0, "glassesposZ", pSkin[playerid][pSkinGlassesPos][2]);
+        cache_get_value_name_float(0, "glassesrotX", pSkin[playerid][pSkinGlassesPos][3]);
+        cache_get_value_name_float(0, "glassesrotY", pSkin[playerid][pSkinGlassesPos][4]);
+        cache_get_value_name_float(0, "glassesrotZ", pSkin[playerid][pSkinGlassesPos][5]);
+        cache_get_value_name_float(0, "glassesscaleX", pSkin[playerid][pSkinGlassesPos][6]);
+        cache_get_value_name_float(0, "glassesscaleY", pSkin[playerid][pSkinGlassesPos][7]);
+        cache_get_value_name_float(0, "glassesscaleZ", pSkin[playerid][pSkinGlassesPos][8]);
+        cache_get_value_name_int(0, "mask", pSkin[playerid][pSkinMask]);
+        cache_get_value_name_float(0, "maskposX", pSkin[playerid][pSkinMaskPos][0]);
+        cache_get_value_name_float(0, "maskposY", pSkin[playerid][pSkinMaskPos][1]);
+        cache_get_value_name_float(0, "maskposZ", pSkin[playerid][pSkinMaskPos][2]);
+        cache_get_value_name_float(0, "maskrotX", pSkin[playerid][pSkinMaskPos][3]);
+        cache_get_value_name_float(0, "maskrotY", pSkin[playerid][pSkinMaskPos][4]);
+        cache_get_value_name_float(0, "maskrotZ", pSkin[playerid][pSkinMaskPos][5]);
+        cache_get_value_name_float(0, "maskscaleX", pSkin[playerid][pSkinMaskPos][6]);
+        cache_get_value_name_float(0, "maskscaleY", pSkin[playerid][pSkinMaskPos][7]);
+        cache_get_value_name_float(0, "maskscaleZ", pSkin[playerid][pSkinMaskPos][8]);
+        cache_get_value_name_int(0, "backpack", pSkin[playerid][pSkinBackpack]);
+        cache_get_value_name_float(0, "backpackposX", pSkin[playerid][pSkinBackpackPos][0]);
+        cache_get_value_name_float(0, "backpackposY", pSkin[playerid][pSkinBackpackPos][1]);
+        cache_get_value_name_float(0, "backpackposZ", pSkin[playerid][pSkinBackpackPos][2]);
+        cache_get_value_name_float(0, "backpackrotX", pSkin[playerid][pSkinBackpackPos][3]);
+        cache_get_value_name_float(0, "backpackrotY", pSkin[playerid][pSkinBackpackPos][4]);
+        cache_get_value_name_float(0, "backpackrotZ", pSkin[playerid][pSkinBackpackPos][5]);
+        cache_get_value_name_float(0, "backpackscaleX", pSkin[playerid][pSkinBackpackPos][6]);
+        cache_get_value_name_float(0, "backpackscaleY", pSkin[playerid][pSkinBackpackPos][7]);
+        cache_get_value_name_float(0, "backpackscaleZ", pSkin[playerid][pSkinBackpackPos][8]);
+
+        // Set skin data
+        SetPlayerSkin(playerid, pSkin[playerid][pSkinID]);
+        if(pSkin[playerid][pSkinHat] != -1) {
+            SetPlayerAttachedObject(playerid, 1, pSkin[playerid][pSkinHat], 2, pSkin[playerid][pSkinHatPos][0], pSkin[playerid][pSkinHatPos][1], pSkin[playerid][pSkinHatPos][2], 
+                                    pSkin[playerid][pSkinHatPos][3], pSkin[playerid][pSkinHatPos][4], pSkin[playerid][pSkinHatPos][5], 
+                                    pSkin[playerid][pSkinHatPos][6], pSkin[playerid][pSkinHatPos][7], pSkin[playerid][pSkinHatPos][8]);
+        }
+        if(pSkin[playerid][pSkinGlasses] != -1) {
+            SetPlayerAttachedObject(playerid, 2, pSkin[playerid][pSkinGlasses], 2, pSkin[playerid][pSkinGlassesPos][0], pSkin[playerid][pSkinGlassesPos][1], pSkin[playerid][pSkinGlassesPos][2], 
+                                    pSkin[playerid][pSkinGlassesPos][3], pSkin[playerid][pSkinGlassesPos][4], pSkin[playerid][pSkinGlassesPos][5], 
+                                    pSkin[playerid][pSkinGlassesPos][6], pSkin[playerid][pSkinGlassesPos][7], pSkin[playerid][pSkinGlassesPos][8]);
+        }
+        if(pSkin[playerid][pSkinMask] != 1) {
+            SetPlayerAttachedObject(playerid, 3, pSkin[playerid][pSkinMask], 2, pSkin[playerid][pSkinMaskPos][0], pSkin[playerid][pSkinMaskPos][1], pSkin[playerid][pSkinMaskPos][2], 
+                                    pSkin[playerid][pSkinMaskPos][3], pSkin[playerid][pSkinMaskPos][4], pSkin[playerid][pSkinMaskPos][5], 
+                                    pSkin[playerid][pSkinMaskPos][6], pSkin[playerid][pSkinMaskPos][7], pSkin[playerid][pSkinMaskPos][8]);
+        }
+        if(pSkin[playerid][pSkinBackpack] != -1) {
+            SetPlayerAttachedObject(playerid, 4, pSkin[playerid][pSkinBackpack], 1, pSkin[playerid][pSkinBackpackPos][0], pSkin[playerid][pSkinBackpackPos][1], pSkin[playerid][pSkinBackpackPos][2], 
+                                    pSkin[playerid][pSkinBackpackPos][3], pSkin[playerid][pSkinBackpackPos][4], pSkin[playerid][pSkinBackpackPos][5], 
+                                    pSkin[playerid][pSkinBackpackPos][6], pSkin[playerid][pSkinBackpackPos][7], pSkin[playerid][pSkinBackpackPos][8]);
+        }
+
+        SetPlayerPos(playerid, pUserD[playerid][pdPos][0], pUserD[playerid][pdPos][1], pUserD[playerid][pdPos][2]);
+        SetPlayerInterior(playerid, pUserD[playerid][pdVirtualID]);
+        SetPlayerVirtualWorld(playerid, pUserD[playerid][pdWorldID]);
+        SetCameraBehindPlayer(playerid);
+        TogglePlayerControllable(playerid, true);
+    }
 }
 
 // CREATE CHARACTER
@@ -126,6 +215,17 @@ public authOnCharacterDataUpdate(playerid)
 
 forward authOnCharacterActivated(playerid);
 public authOnCharacterActivated(playerid)
+{
+    new query[256];
+    mysql_format(g_SQL, query, sizeof(query), "INSERT INTO `krakterdata` (`identifier`, `firstname`, `lastname`, `birthday`, `age`, `sex`) VALUES ('%s', '%s', '%s', '%s', %d, '%s')", 
+        pUser[playerid][pIdentifier], pUserD[playerid][pdFirstName], pUserD[playerid][pdLastName], pUserD[playerid][pdBirtDay], pUserD[playerid][pdAge], pUserD[playerid][pdGender]);
+    mysql_tquery(g_SQL, query, "authOnCharacterDataInsert", "d", playerid);
+    return 1;
+}
+
+
+forward authOnCharacterDataInsert(playerid);
+public authOnCharacterDataInsert(playerid)
 {
     SetPlayerPos(playerid, -2415.8567, -593.8060, 132.7245);
     SetCameraBehindPlayer(playerid);
