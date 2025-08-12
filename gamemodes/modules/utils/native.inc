@@ -28,4 +28,3 @@ stock GetRpName(playerid)
     format(name, sizeof(name), "%s_%s", pUserD[playerid][pdFirstName], pUserD[playerid][pdLastName]);
     return name;
 }
-

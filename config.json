@@ -97,10 +97,8 @@
     "pawn": {
         "legacy_plugins": [
             "crashdetect",
-            "PawnPlus",
             "cef",
-            "mysql",
-            "samp_bcrypt"
+            "mysql"
         ],
         "main_scripts": [
             "main 1"

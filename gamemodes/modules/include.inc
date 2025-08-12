@@ -13,4 +13,19 @@
 #include "modules/skin/config"
 #include "modules/skin/native"
 #include "modules/skin/main"
-#include "modules/skin/cmd"
+
+//hbe   
+#include "modules/hbe/native"
+#include "modules/hbe/main"
+
+//vehicle
+#include "modules/veh/enum"
+#include "modules/veh/native"
+#include "modules/veh/main"
+
+//timer 
+#include "modules/utils/timer"
+
+//cmd
+#include "modules/utils/cmd/admin"
+#include "modules/utils/cmd/player"
