@@ -80,6 +80,11 @@ public OnPlayerDisconnect(playerid, reason)
 
         KillTimer(gTimer[playerid]);
         gTimer[playerid] = 0;
+
+        KillTimer(gTimerInVehicle[playerid]);
+        gTimerInVehicle[playerid] = 0;
+
+        vehOnPlayerDisconnect(playerid);
     }    
     return 1;
 }
@@ -105,10 +110,7 @@ public OnPlayerExitVehicle(playerid, vehicleid)
     return 1;
 }
 
-public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, 
-    Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, 
-    Float:fRotX, Float:fRotY, Float:fRotZ, 
-    Float:fScaleX, Float:fScaleY, Float:fScaleZ)
+public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
 {
     if (pUser[playerid][pLogin] == 1)
     {

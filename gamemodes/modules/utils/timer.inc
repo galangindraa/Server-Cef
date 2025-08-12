@@ -9,7 +9,7 @@ public playerTimer(playerid)
 forward playerTimerInVehicle(playerid);
 public playerTimerInVehicle(playerid)
 {
-    speedometer_set(playerid);
-    printf("playerTimerInVehicle");
+    new Float:speed = GetVehicleSpeed(GetPlayerVehicleID(playerid));
+    speedometer_set(playerid, speed);
     return 1;
 }

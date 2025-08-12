@@ -129,11 +129,11 @@ public authOnCharacterData(playerid)
         // Load financial and status data
         cache_get_value_name_int(0, "money", pUserD[playerid][pdMoney]);
         cache_get_value_name_int(0, "bank", pUserD[playerid][pdMoneyBank]);
-        cache_get_value_name_int(0, "hunger", pUserD[playerid][pdHunger]);
-        cache_get_value_name_int(0, "thirst", pUserD[playerid][pdThirst]);
-        cache_get_value_name_int(0, "stress", pUserD[playerid][pdStrees]);
         cache_get_value_name_float(0, "health", pUserD[playerid][pdHealth]);
         cache_get_value_name_float(0, "armor", pUserD[playerid][pdArmour]);
+        cache_get_value_name_float(0, "hunger", pUserD[playerid][pdHunger]);
+        cache_get_value_name_float(0, "thirst", pUserD[playerid][pdThirst]);
+        cache_get_value_name_float(0, "stress", pUserD[playerid][pdStrees]);
 
         // Load skin data
         new query[256];
@@ -387,9 +387,9 @@ stock authOnPlayerDisconnect(playerid)
         `worldid` = %d, \
         `health` = %.2f, \
         `armor` = %.2f, \
-        `hunger` = %d, \
-        `thirst` = %d, \
-        `stress` = %d \
+        `hunger` = %.2f, \
+        `thirst` = %.2f, \
+        `stress` = %.2f \
         WHERE `identifier` = '%s'",
         pUserD[playerid][pdMoney], 
         pUserD[playerid][pdMoneyBank], 

@@ -46,13 +46,6 @@ stock hbe_updateEnergy(playerid)
     if(pUserD[playerid][pdThirst] > 0){ 
         pUserD[playerid][pdThirst] -= adjustment1;
     }
-    
-    if(pUserD[playerid][pdHunger] > 100) {
-        pUserD[playerid][pdHunger] = 100;
-    }
-    if(pUserD[playerid][pdThirst] > 100) {
-        pUserD[playerid][pdThirst] = 100;
-    }
 }
 
 stock hbe_setHudData(playerid)
@@ -63,9 +56,21 @@ stock hbe_setHudData(playerid)
         "{\"health\":%d,\"armor\":%d,\"hunger\":%d,\"thirst\":%d,\"stress\":%d}",
         GetHealth(playerid),
         GetArmor(playerid),
-        pUserD[playerid][pdHunger],
-        pUserD[playerid][pdThirst],
-        pUserD[playerid][pdStrees]
+        floatround(pUserD[playerid][pdHunger]),
+        floatround(pUserD[playerid][pdThirst]),
+        floatround(pUserD[playerid][pdStrees])
     );
     cef_emit_event(playerid, "ui:hudsetdata", CEFSTR(jsonFormat));
+}
+
+stock speedometer_set(playerid, Float:speed)
+{
+    new jsonFormat[256];
+    
+    format(jsonFormat, sizeof(jsonFormat),
+        "{\"speed\":%d,\"fuel\":%d}",
+        floatround(speed),
+        100
+    );
+    cef_emit_event(playerid, "ui:updateSpedoData", CEFSTR(jsonFormat));
 }

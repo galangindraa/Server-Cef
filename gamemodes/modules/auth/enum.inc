@@ -24,9 +24,9 @@ enum pd_data {
 
     Float:pdHealth,
     Float:pdArmour,
-    pdHunger,
-    pdThirst,
-    pdStrees,
+    Float:pdHunger,
+    Float:pdThirst,
+    Float:pdStrees,
 
     //not saved
     pdSkinIDLast,
