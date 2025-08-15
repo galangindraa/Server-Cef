@@ -16,18 +16,21 @@ fnc:vehOnPlayerLoad(playerid)
             cache_get_value_name_float(i, "posy", pVehData[vehicleid][pVehPosY]);
             cache_get_value_name_float(i, "posz", pVehData[vehicleid][pVehPosZ]);
             cache_get_value_name_float(i, "posa", pVehData[vehicleid][pVehPosA]);
+            cache_get_value_name_float(i, "fuel", pVehData[vehicleid][pVehFuel]);
             cache_get_value_name(i, "plate", pVehData[vehicleid][pVehPlate], 32);
             cache_get_value_name_int(i, "panels", pVehData[vehicleid][pVehPanels]);
             cache_get_value_name_int(i, "doors", pVehData[vehicleid][pVehDoors]);
             cache_get_value_name_int(i, "lights", pVehData[vehicleid][pVehLights]);
             cache_get_value_name_int(i, "tires", pVehData[vehicleid][pVehTires]);
             cache_get_value_name_float(i, "engine", pVehData[vehicleid][pVehEngine]);
+            cache_get_value_name_int(i, "locked", pVehData[vehicleid][pVehLocked]);
             if((spawnid = CreateVehicle(pVehData[vehicleid][pVehModel], pVehData[vehicleid][pVehPosX], pVehData[vehicleid][pVehPosY], pVehData[vehicleid][pVehPosZ], pVehData[vehicleid][pVehPosA], pVehData[vehicleid][pVehColor1], pVehData[vehicleid][pVehColor2], -1, false)) != INVALID_VEHICLE_ID  )
             {
                 pVehData[vehicleid][pVehSpawnID] = spawnid;
                 SetVehicleNumberPlate(spawnid, pVehData[vehicleid][pVehPlate]);
                 UpdateVehicleDamageStatus(spawnid, pVehData[vehicleid][pVehPanels], pVehData[vehicleid][pVehDoors], pVehData[vehicleid][pVehLights], pVehData[vehicleid][pVehTires]);
                 SetVehicleHealth(spawnid, pVehData[vehicleid][pVehEngine]);
+                LockVehicle(spawnid, pVehData[vehicleid][pVehLocked]);
                 Iter_Add(PlayerVehicles<playerid>, vehicleid);
             }
         }
@@ -55,12 +58,14 @@ stock vehOnPlayerDisconnect(playerid)
             `posy` = %.2f, \
             `posz` = %.2f, \
             `posa` = %.2f, \
+            `fuel` = %.2f, \
             `plate` = '%s', \
             `panels` = %d, \
             `doors` = %d, \
             `lights` = %d, \
             `tires` = %d, \
-            `engine` = %.2f \
+            `engine` = %.2f, \
+            `locked` = %d \
             WHERE `id` = %d",
             pVehData[i][pVehColor1],
             pVehData[i][pVehColor2],
@@ -68,12 +73,14 @@ stock vehOnPlayerDisconnect(playerid)
             pPos[1],
             pPos[2],
             pPos[3],
+            pVehData[i][pVehFuel],
             pVehData[i][pVehPlate],
             panels,
             doors,
             lights,
             tires,
             engine,
+            pVehData[i][pVehLocked],
             pVehData[i][pVehID]
         );
         mysql_pquery(g_SQL, cQuery);

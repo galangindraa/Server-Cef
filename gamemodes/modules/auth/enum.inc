@@ -5,7 +5,7 @@ enum p_data {
     pName[MAX_PLAYER_NAME + 1],
     pActive,
     pAdmin,
-    pAdminPoint,
+    pAdminPoint
 } 
 
 new pUser[MAX_PLAYERS][p_data]; // UCP data for each player
@@ -29,7 +29,8 @@ enum pd_data {
     Float:pdStrees,
 
     //not saved
-    pdSkinIDLast,
+    pdInVehicle,
+    bool:pSeatBelt
 }
 
 new pUserD[MAX_PLAYERS][pd_data];

@@ -14,6 +14,8 @@ enum pVeh {
     VEHICLE_LIGHT_STATUS:pVehLights,
     VEHICLE_TIRE_STATUS:pVehTires,
     Float:pVehEngine,
+    pVehLocked,
+    Float:pVehFuel
 }
 
 new pVehData[MAX_VEHICLES][pVeh];

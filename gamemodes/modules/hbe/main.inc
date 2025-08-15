@@ -63,14 +63,14 @@ stock hbe_setHudData(playerid)
     cef_emit_event(playerid, "ui:hudsetdata", CEFSTR(jsonFormat));
 }
 
-stock speedometer_set(playerid, Float:speed)
+stock speedometer_set(playerid, vehicleid, Float:speed)
 {
     new jsonFormat[256];
     
     format(jsonFormat, sizeof(jsonFormat),
         "{\"speed\":%d,\"fuel\":%d}",
         floatround(speed),
-        100
+        floatround(pVehData[vehicleid][pVehFuel])
     );
     cef_emit_event(playerid, "ui:updateSpedoData", CEFSTR(jsonFormat));
 }

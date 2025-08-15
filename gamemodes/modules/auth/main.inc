@@ -38,18 +38,8 @@ public authOnLauncherTokenCheck(playerid)
 
 stock authOnTokenValid(playerid)
 {
-    // Set initial spawn information
-    SetSpawnInfo(playerid, NO_TEAM, 1, -2415.8567, -593.8060, 132.7245, 259.7749, 
-        t_WEAPON:0, 0, t_WEAPON:0, 0, t_WEAPON:0, 0);
-    SpawnPlayer(playerid);  
-    
-    // Set player to isolated virtual world and camera
-    SetPlayerVirtualWorld(playerid, playerid + 1);
     SetPlayerCameraPos(playerid, -2410.679, -593.605, 134.165 + 90);
     SetPlayerCameraLookAt(playerid, -2403.808, -594.079, 132.648 + 90);
-
-    SendClientMessage(playerid, -1, "Selamat datang di District Roleplay, {FFFF00}%s!", pUser[playerid][pName]);
-    
     // Check if character exists
     new query[256];
     mysql_format(g_SQL, query, sizeof(query), 
@@ -79,7 +69,7 @@ public authOnCharacterCheck(playerid)
         if (pUser[playerid][pActive] == 0) 
         {
             // Character exists but not activated - show creation UI
-            SetTimerEx("authDelayedCharacterCreate", 3000, false, "d", playerid);
+            SetTimerEx("authDelayedCharacterCreate", 1000, false, "d", playerid);
         }
         else
         {
@@ -209,7 +199,6 @@ public authOnCharacterSkinData(playerid)
         // Set player properties and spawn
         SetPlayerInterior(playerid, pUserD[playerid][pdVirtualID]);
         SetPlayerVirtualWorld(playerid, pUserD[playerid][pdWorldID]);
-        TogglePlayerControllable(playerid, true);
         SetPlayerSkin(playerid, 1);
         SetPlayerPos(playerid, pUserD[playerid][pdPos][0], pUserD[playerid][pdPos][1], pUserD[playerid][pdPos][2]);
         SetCameraBehindPlayer(playerid);
@@ -221,7 +210,6 @@ public authOnCharacterSkinData(playerid)
         mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `krakterveh` WHERE `identifier` = '%s'", pUser[playerid][pIdentifier]);
         mysql_tquery(g_SQL, query, "vehOnPlayerLoad", "d", playerid);
         // Initialize UI and attachments
-        SetTimerEx("authUIReady", 3000, false, "d", playerid);
         SetTimerEx("authDelayedCharacterAttachProp", 500, false, "i", playerid);
     }
     return 1;
@@ -281,6 +269,8 @@ public authDelayedCharacterAttachProp(playerid)
             pSkin[playerid][pSkinBackpackPos][3], pSkin[playerid][pSkinBackpackPos][4], pSkin[playerid][pSkinBackpackPos][5], 
             pSkin[playerid][pSkinBackpackPos][6], pSkin[playerid][pSkinBackpackPos][7], pSkin[playerid][pSkinBackpackPos][8]);
     }
+    
+    SetTimerEx("LoadingFirstUITimer", 2000, false, "d", playerid);
     return 1;
 }
 
@@ -408,9 +398,9 @@ stock authOnPlayerDisconnect(playerid)
     return 1;
 }
 
-forward authUIReady(playerid);
-public authUIReady(playerid)
+stock authUIReady(playerid)
 {
     cef_emit_event(playerid, "ui:showhud");
+    
     return 1;
 }
