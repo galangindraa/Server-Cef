@@ -98,7 +98,8 @@
         "legacy_plugins": [
             "crashdetect",
             "cef",
-            "mysql"
+            "mysql",
+            "streamer"
         ],
         "main_scripts": [
             "main 1"

@@ -28,9 +28,13 @@ enum pd_data {
     Float:pdThirst,
     Float:pdStrees,
 
+    pdMaxVeh,
+
     //not saved
     pdInVehicle,
-    bool:pSeatBelt
+    bool:pSeatBelt,
+    bool:pDrunkEffect
+    
 }
 
 new pUserD[MAX_PLAYERS][pd_data];

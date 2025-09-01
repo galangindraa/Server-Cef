@@ -16,26 +16,44 @@ public playerTimer(playerid)
     hbe_setHudData(playerid);
     hbe_updateEnergy(playerid);
 
-    gTimerInVehicleUpdate[playerid]++;
-    if(gTimerInVehicleUpdate[playerid] >= 45)
+    if(++gTimerStatsUpdate[playerid] >= 60)
+    {
+        if(pUserD[playerid][pdHunger] <= 20.0 || pUserD[playerid][pdThirst] <= 20.0)
+        {
+            ShowNotification(playerid, "stats", "Stats", "Kamu terlalu lapar dan kehausan", "info");
+            new Float:health;
+            GetPlayerHealth(playerid, health);
+            SetPlayerHealth(playerid, health - RandomFloat(2.0, 5.0));
+        }
+
+        if(pUserD[playerid][pdStrees] >= 60.0)
+        {
+            if(!pUserD[playerid][pDrunkEffect])
+            {
+                SetPlayerDrunkEffect(playerid, 4000);
+            }
+        }
+        gTimerStatsUpdate[playerid] = 0;
+    }
+
+    if(++gTimerInVehicleUpdate[playerid] >= 45)
     {
         foreach(new i : PlayerVehicles<playerid>)
         {
-            if(IsValidVehicle(pVehData[i][pVehSpawnID]) && IsEngineVehicle(pVehData[i][pVehSpawnID]) && GetEngineStatus(pVehData[i][pVehSpawnID]))
+            if(IsValidVehicle(pVehData[playerid][i][pVehSpawnID]) && IsEngineVehicle(pVehData[playerid][i][pVehSpawnID]) && GetEngineStatus(pVehData[playerid][i][pVehSpawnID]))
             {
-                if(pVehData[i][pVehFuel] > 0.0)
+                if(pVehData[playerid][i][pVehFuel] > 0.0)
                 {
-                    pVehData[i][pVehFuel] -= RandomFloat(0.03, 0.25);
-                    if(pVehData[i][pVehFuel] <= 0.0)
+                    pVehData[playerid][i][pVehFuel] -= RandomFloat(0.03, 0.25);
+                    if(pVehData[playerid][i][pVehFuel] <= 0.0)
                     {
-                        pVehData[i][pVehFuel] = 0.0;
-                        EngineVehicle(pVehData[i][pVehSpawnID], false);
+                        pVehData[playerid][i][pVehFuel] = 0.0;
+                        EngineVehicle(pVehData[playerid][i][pVehSpawnID], false);
                         
-                        if(GetVehicleDriver(i) != INVALID_PLAYER_ID)
-                            GameTextForPlayer(GetVehicleDriver(i), "Bensin kendaraan telah habis!", 3000, 3);
+                        if(GetVehicleDriver(pVehData[playerid][i][pVehSpawnID]) != INVALID_PLAYER_ID)
+                            ShowNotification(playerid, "default", "Vehicle", "Bensin kendaraan telah habis!", "error", 5000);
                     }
                 }
-                printf("Fuel: %f", pVehData[i][pVehFuel]);
             }
             gTimerInVehicleUpdate[playerid] = 0;
         }
@@ -46,7 +64,7 @@ public playerTimer(playerid)
 forward playerTimerInVehicle(playerid, vehicleid);
 public playerTimerInVehicle(playerid, vehicleid)
 {
-    new Float:speed = GetVehicleSpeed(pVehData[vehicleid][pVehSpawnID]);
+    new Float:speed = GetVehicleSpeed(pVehData[playerid][vehicleid][pVehSpawnID]);
     speedometer_set(playerid, vehicleid, speed);
     gPreviousVehicleSpeed[playerid] = speed;
     return 1;

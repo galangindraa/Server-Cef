@@ -6,7 +6,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
         cef_emit_event(playerid, "ui:showSpeedometer");
         foreach(new i : PlayerVehicles<playerid>)
         {
-            if(vehicleid != pVehData[i][pVehSpawnID]) continue;
+            if(vehicleid != pVehData[playerid][i][pVehSpawnID]) continue;
             pUserD[playerid][pdInVehicle] = i;
             gTimerInVehicle[playerid] = SetTimerEx("playerTimerInVehicle", 100, true, "id", playerid, i);
             gPreviousVehicleSpeed[playerid] = 0.0;
@@ -55,24 +55,30 @@ public void:OnPlayerKeyUp(player, key)
 	format(buffer, sizeof(buffer), "KeyUp: %d", key);
 	SendClientMessage(player, -1, buffer);
 
+    if(key == 113)
+    {
+        cef_emit_event(player, "openInventory", CEFSTR(pUser[player][pIdentifier]));
+        cef_focus_browser(player, INTERFACE_BROWSER_ID, true);
+    }
+
     if(key == 85)
     {
         new vehicleid = GetClosestVehicle(player);
         if(vehicleid != -1)
         {
-            if(pVehData[vehicleid][pVehLocked] == 0)
+            if(pVehData[player][vehicleid][pVehLocked] == 0)
             {
                 PlayerPlaySound(player, 24600, 0.0, 0.0, 0.0);
                 ShowNotification(player, "default", "Kendaraan", "Kendaraan telah terkunci", "error", 5000);
-                LockVehicle(pVehData[vehicleid][pVehSpawnID], 1);
-                pVehData[vehicleid][pVehLocked] = 1;
+                LockVehicle(pVehData[player][vehicleid][pVehSpawnID], 1);
+                pVehData[player][vehicleid][pVehLocked] = 1;
             }
             else
             {
                 PlayerPlaySound(player, 24600, 0.0, 0.0, 0.0);
                 ShowNotification(player, "default", "Kendaraan", "Kendaraan telah terbuka", "success", 5000);
-                LockVehicle(pVehData[vehicleid][pVehSpawnID], 0);
-                pVehData[vehicleid][pVehLocked] = 0;
+                LockVehicle(pVehData[player][vehicleid][pVehSpawnID], 0);
+                pVehData[player][vehicleid][pVehLocked] = 0;
             }
         }
     }
@@ -82,9 +88,9 @@ public void:OnPlayerKeyUp(player, key)
 		{
             new vehicleid = GetPlayerVehicleID(player);
             new i = pUserD[player][pdInVehicle];
-            if(pVehData[i][pVehSpawnID] == vehicleid)
+            if(pVehData[player][i][pVehSpawnID] == vehicleid)
             {
-                if(pVehData[i][pVehFuel] <= 0.0)
+                if(pVehData[player][i][pVehFuel] <= 0.0)
                 {
                     ShowNotification(player, "default", "Kendaraan", "Bensin kendaraan telah habis", "error", 5000);
                     return 1;

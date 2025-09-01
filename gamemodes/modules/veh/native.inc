@@ -86,7 +86,7 @@ stock GetClosestVehicle(playerid)
     
     foreach(new i : PlayerVehicles<playerid>)
     {
-        new Float:distance = GetVehicleDistanceFromPoint(pVehData[i][pVehSpawnID], X, Y, Z);
+        new Float:distance = GetVehicleDistanceFromPoint(pVehData[playerid][i][pVehSpawnID], X, Y, Z);
         if(distance < 8.0 && distance < 99999.0)
         {
             return i;
@@ -100,6 +100,9 @@ stock CreatePlayerVehicle(playerid, modelid, color1, color2, respawn_delay, bool
 {
     new newid = Iter_Free(PlayerVehicles<playerid>);
     if(newid != cellmin) {
+        if(newid >= pUserD[playerid][pdMaxVeh]) {
+            return 0;
+        }
         new Float:x, Float:y, Float:z, Float:a;
         GetPlayerPos(playerid, x, y, z);
         GetPlayerFacingAngle(playerid, a);
@@ -111,21 +114,22 @@ stock CreatePlayerVehicle(playerid, modelid, color1, color2, respawn_delay, bool
             GetVehicleHealth(vehicleid, engine);
             GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
             SetVehicleNumberPlate(vehicleid, "NONE");
-            pVehData[newid][pVehModel] = modelid;
-            pVehData[newid][pVehColor1] = color1;
-            pVehData[newid][pVehColor2] = color2;
-            pVehData[newid][pVehPosX] = x;
-            pVehData[newid][pVehPosY] = y;
-            pVehData[newid][pVehPosZ] = z;
-            pVehData[newid][pVehPosA] = a;
-            pVehData[newid][pVehPanels] = panels;
-            pVehData[newid][pVehDoors] = doors;
-            pVehData[newid][pVehLights] = lights;
-            pVehData[newid][pVehTires] = tires;
-            pVehData[newid][pVehEngine] = engine;
-            strcpy(pVehData[newid][pVehPlate], "NONE", 32);
-            pVehData[newid][pVehSpawnID] = vehicleid;
-            pVehData[newid][pVehLocked] = 1;
+            pVehData[playerid][newid][pVehModel] = modelid;
+            pVehData[playerid][newid][pVehColor1] = color1;
+            pVehData[playerid][newid][pVehColor2] = color2;
+            pVehData[playerid][newid][pVehPosX] = x;
+            pVehData[playerid][newid][pVehPosY] = y;
+            pVehData[playerid][newid][pVehPosZ] = z;
+            pVehData[playerid][newid][pVehPosA] = a;
+            pVehData[playerid][newid][pVehPanels] = panels;
+            pVehData[playerid][newid][pVehDoors] = doors;
+            pVehData[playerid][newid][pVehLights] = lights;
+            pVehData[playerid][newid][pVehTires] = tires;
+            pVehData[playerid][newid][pVehEngine] = engine;
+            strcpy(pVehData[playerid][newid][pVehPlate], "NONE", 32);
+            pVehData[playerid][newid][pVehSpawnID] = vehicleid;
+            pVehData[playerid][newid][pVehLocked] = 1;
+            pVehData[playerid][newid][pVehFuel] = 100.0;
             LockVehicle(vehicleid, 1);
             new query[562];
             mysql_format(g_SQL, query, sizeof(query), "INSERT INTO `krakterveh` (`identifier`, `model`, `color1`, `color2`, `posx`, `posy`, `posz`, `posa`, `plate`, `panels`, `doors`, `lights`, `tires`, `engine`) VALUES ('%s', %d, %d, %d, %.2f, %.2f, %.2f, %.2f, 'NONE', %d, %d, %d, %d, %.2f)", pUser[playerid][pIdentifier], modelid, color1, color2, x, y, z, a, panels, doors, lights, tires, engine);
@@ -141,11 +145,11 @@ forward OnPlayerVehicleSpawn(playerid, newid);
 public OnPlayerVehicleSpawn(playerid, newid) {
     if (cache_affected_rows())
     {
-        pVehData[newid][pVehID] = cache_insert_id();
+        pVehData[playerid][newid][pVehID] = cache_insert_id();
     }
     else 
     {
-        DestroyVehicle(pVehData[newid][pVehSpawnID]);
+        DestroyVehicle(pVehData[playerid][newid][pVehSpawnID]);
         Iter_Remove(PlayerVehicles<playerid>, newid);
     }
 }

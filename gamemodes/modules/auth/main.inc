@@ -125,6 +125,8 @@ public authOnCharacterData(playerid)
         cache_get_value_name_float(0, "thirst", pUserD[playerid][pdThirst]);
         cache_get_value_name_float(0, "stress", pUserD[playerid][pdStrees]);
 
+        cache_get_value_name_int(0, "maxVeh", pUserD[playerid][pdMaxVeh]);
+
         // Load skin data
         new query[256];
         mysql_format(g_SQL, query, sizeof(query), 
@@ -205,10 +207,14 @@ public authOnCharacterSkinData(playerid)
         SetPlayerHealth(playerid, pUserD[playerid][pdHealth]);
         SetPlayerArmour(playerid, pUserD[playerid][pdArmour]);
 
+        //get player inventory
+        LoadInventory(playerid);
+
         //get player vehicles
         new query[256];
         mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `krakterveh` WHERE `identifier` = '%s'", pUser[playerid][pIdentifier]);
         mysql_tquery(g_SQL, query, "vehOnPlayerLoad", "d", playerid);
+
         // Initialize UI and attachments
         SetTimerEx("authDelayedCharacterAttachProp", 500, false, "i", playerid);
     }
@@ -379,7 +385,8 @@ stock authOnPlayerDisconnect(playerid)
         `armor` = %.2f, \
         `hunger` = %.2f, \
         `thirst` = %.2f, \
-        `stress` = %.2f \
+        `stress` = %.2f, \
+        `maxVeh` = %d \
         WHERE `identifier` = '%s'",
         pUserD[playerid][pdMoney], 
         pUserD[playerid][pdMoneyBank], 
@@ -393,14 +400,8 @@ stock authOnPlayerDisconnect(playerid)
         pUserD[playerid][pdHunger], 
         pUserD[playerid][pdThirst], 
         pUserD[playerid][pdStrees], 
+        pUserD[playerid][pdMaxVeh],
         pUser[playerid][pIdentifier]);
     mysql_tquery(g_SQL, cQuery);
-    return 1;
-}
-
-stock authUIReady(playerid)
-{
-    cef_emit_event(playerid, "ui:showhud");
-    
     return 1;
 }

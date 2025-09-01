@@ -93,3 +93,39 @@
 [8/15/2025 10:12:26 PM] [WARNING] mysql_connect: no password specified
 [8/15/2025 10:19:34 PM] [WARNING] mysql_connect: no password specified
 [8/15/2025 10:25:34 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:12:27 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:14:21 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:16:23 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:21:57 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:39:36 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 10:40:58 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 10:46:39 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 11:28:34 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 11:41:04 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 11:53:58 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 11:56:10 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 11:59:07 AM] [WARNING] mysql_connect: no password specified
+[8/17/2025 12:08:08 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 12:11:17 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 12:23:30 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 12:23:32 PM] [ERROR] CConnection::CConnection - establishing connection to MySQL database failed: #2002 'Can't connect to MySQL server on '127.0.0.1' (10061)'
+[8/17/2025 12:23:34 PM] [ERROR] CConnection::CConnection - establishing connection to MySQL database failed: #2002 'Can't connect to MySQL server on '127.0.0.1' (10061)'
+[8/17/2025 12:23:37 PM] [ERROR] CConnection::CConnection - establishing connection to MySQL database failed: #2002 'Can't connect to MySQL server on '127.0.0.1' (10061)'
+[8/17/2025 12:23:39 PM] [ERROR] CConnection::CConnection - establishing connection to MySQL database failed: #2002 'Can't connect to MySQL server on '127.0.0.1' (10061)'
+[8/17/2025 12:23:43 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 12:28:48 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 12:43:20 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:51:14 PM] [WARNING] mysql_connect: no password specified
+[8/17/2025 1:54:03 PM] [WARNING] mysql_connect: no password specified
+[8/18/2025 12:49:47 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 12:51:49 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 1:27:30 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 1:30:47 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 2:02:35 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 2:33:55 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 2:43:23 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 2:57:57 AM] [WARNING] mysql_connect: no password specified
+[8/18/2025 3:07:54 AM] [WARNING] mysql_connect: no password specified
+[8/19/2025 1:07:00 AM] [WARNING] mysql_connect: no password specified
+[8/19/2025 1:09:20 AM] [WARNING] mysql_connect: no password specified
+[9/1/2025 7:47:39 PM] [WARNING] mysql_connect: no password specified

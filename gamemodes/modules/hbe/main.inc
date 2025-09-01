@@ -70,7 +70,7 @@ stock speedometer_set(playerid, vehicleid, Float:speed)
     format(jsonFormat, sizeof(jsonFormat),
         "{\"speed\":%d,\"fuel\":%d}",
         floatround(speed),
-        floatround(pVehData[vehicleid][pVehFuel])
+        floatround(pVehData[playerid][vehicleid][pVehFuel])
     );
     cef_emit_event(playerid, "ui:updateSpedoData", CEFSTR(jsonFormat));
 }

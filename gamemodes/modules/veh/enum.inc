@@ -1,3 +1,5 @@
+#define MAX_PLAYER_VEHICLES 15
+
 enum pVeh {
     pVehID,
     pVehSpawnID,
@@ -18,6 +20,6 @@ enum pVeh {
     Float:pVehFuel
 }
 
-new pVehData[MAX_VEHICLES][pVeh];
+new pVehData[MAX_PLAYERS][MAX_PLAYER_VEHICLES][pVeh];
 
-new Iterator:PlayerVehicles<MAX_PLAYERS, MAX_VEHICLES>;
+new Iterator:PlayerVehicles<MAX_PLAYERS, MAX_PLAYER_VEHICLES>;

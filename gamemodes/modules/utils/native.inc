@@ -28,3 +28,24 @@ stock GetRpName(playerid)
     format(name, sizeof(name), "%s_%s", pUserD[playerid][pdFirstName], pUserD[playerid][pdLastName]);
     return name;
 }
+
+stock SetHealth(playerid, amount)
+{
+    new Float:health = float(amount);
+    SetPlayerHealth(playerid, health);
+    pUserD[playerid][pdHealth] = amount;
+}
+
+stock SetPlayerDrunkEffect(playerid, level)
+{
+    if(level == 0)
+    {
+        pUserD[playerid][pDrunkEffect] = false;
+        SetPlayerDrunkLevel(playerid, 0);
+        return 1;
+    }
+
+    SetPlayerDrunkLevel(playerid, level);
+    pUserD[playerid][pDrunkEffect] = true;
+    return 1;
+}

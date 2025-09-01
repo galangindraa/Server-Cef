@@ -14,6 +14,7 @@
 #include <cef>
 #include <easyDialog>
 #include <KeyListener>
+#include <streamer>
 
 #define INTERFACE_BROWSER_ID             0xABCDE
 #define INTERFACE_BROWSER_URL            "http://localhost:3000"
@@ -22,6 +23,7 @@
 #define forex(%0,%1)                    for(new %0 = 0; %0 != %1; %0++)
 
 new gTimer[MAX_PLAYERS] = {0, ...};
+new gTimerStatsUpdate[MAX_PLAYERS] = {0, ...};
 new gTimerInVehicle[MAX_PLAYERS] = {0, ...};
 new gTimerInVehicleUpdate[MAX_PLAYERS] = {0, ...};
 new Float:gPreviousVehicleSpeed[MAX_PLAYERS] = {0.0, ...};
@@ -37,6 +39,8 @@ public OnGameModeInit()
 {
     DatabaseConnection();
     
+    cef_subscribe("ui:exit", "uiOnExit");
+
     cef_subscribe("ui:createCharacter", "authOnCreateCharacter");
 
     cef_subscribe("ui:closeSkinMenu", "skinOnCloseMenu");
@@ -50,7 +54,6 @@ public OnGameModeInit()
     cef_subscribe("ui:updateSkinList", "skinOnpdateSkinList");
     cef_subscribe("ui:saveOutfitList", "skinOnSaveOutfitList");
     cef_subscribe("ui:deleteSkinList", "skinOnDeleteSkinList");
-    
     return 1;
 }
 
@@ -80,16 +83,36 @@ public OnPlayerDisconnect(playerid, reason)
     }
     return 1;
 }
-
 public OnCefInitialize(player_id, success) 
 {
     if (success == 1) 
     {
         SendClientMessage(player_id, -1, "Cef interface initialized successfully.");
         cef_create_browser(player_id, INTERFACE_BROWSER_ID, INTERFACE_BROWSER_URL, false, false);
-        authCheckLauncherToken(player_id);
         return;
     }
     
     SendClientMessage(player_id, -1, "Ahh to bad you cannot see our new cool interface ...");
+}
+
+public OnCefBrowserCreated(player_id, browser_id, status_code)
+{
+    if(browser_id == INTERFACE_BROWSER_ID)
+    {
+        if(status_code == 200)
+        {
+            authCheckLauncherToken(player_id);
+        }
+        else
+        {
+            authKickPlayerWithMessage(player_id, "Failed to create browser");
+        }
+    }
+}
+
+forward uiOnExit(player_id);
+public uiOnExit(player_id)
+{
+    cef_focus_browser(player_id, INTERFACE_BROWSER_ID, false);
+    return 1;
 }
