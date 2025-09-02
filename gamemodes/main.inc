@@ -101,7 +101,7 @@ public OnCefBrowserCreated(player_id, browser_id, status_code)
     {
         if(status_code == 200)
         {
-            authCheckLauncherToken(player_id);
+            authOnTokenValid(player_id);
         }
         else
         {

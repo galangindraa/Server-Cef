@@ -25981,3 +25981,10 @@ Loaded 23 component(s) from C:\Users\Administrator\Desktop\Server\components
 [2025-09-01T19:49:20+0700] [Info] [connection] incoming connection: 127.0.0.1:64337 id: 0
 [2025-09-01T19:49:20+0700] [Info] [join] Budi has joined the server (0:127.0.0.1)
 [2025-09-01T19:50:40+0700] [Info] [part] Budi_Doremi has left the server (0:1)
+[2025-09-01T19:54:29+0700] [Info] [Pawn.RakNet] plugin unloaded
+[2025-09-01T19:54:29+0700] [Info] [Pawn.CMD] plugin unloaded
+[2025-09-01T19:54:29+0700] [Info] 
+
+*** Streamer Plugin v2.9.6 by Incognito unloaded ***
+
+[2025-09-01T19:54:29+0700] [Info] plugin.mysql: Unloading plugin...

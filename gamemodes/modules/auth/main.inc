@@ -6,38 +6,11 @@
 // =============================================================================
 // Launcher Token Verification
 // =============================================================================
-
-stock authCheckLauncherToken(playerid)
+stock authOnTokenValid(playerid)
 {
     if (!authValidatePlayer(playerid)) 
         return 0;
-    
-    new query[256];
-    mysql_format(g_SQL, query, sizeof(query), 
-        "SELECT * FROM `launchertoken` WHERE `identifier` = '%s'", 
-        pUser[playerid][pName]);
-    mysql_tquery(g_SQL, query, "authOnLauncherTokenCheck", "d", playerid);
-    return 1;
-}
 
-forward authOnLauncherTokenCheck(playerid);
-public authOnLauncherTokenCheck(playerid)
-{
-    new rows = cache_num_rows();
-    if (rows) 
-    {
-        authOnTokenValid(playerid);
-    }
-    else 
-    {
-        authKickPlayerWithMessage(playerid, "Silakan Login Mengunak Launcher District Roleplay!\nJika belum memiliki akun, silakan buat akun di https://districtroleplay.com");
-        return 1;
-    }
-    return 1;   
-}
-
-stock authOnTokenValid(playerid)
-{
     SetPlayerCameraPos(playerid, -2410.679, -593.605, 134.165 + 90);
     SetPlayerCameraLookAt(playerid, -2403.808, -594.079, 132.648 + 90);
     // Check if character exists
@@ -68,8 +41,8 @@ public authOnCharacterCheck(playerid)
 
         if (pUser[playerid][pActive] == 0) 
         {
-            // Character exists but not activated - show creation UI
-            SetTimerEx("authDelayedCharacterCreate", 1000, false, "d", playerid);
+            cef_emit_event(playerid, "ui:showcreatecharacter", CEFSTR("true"));
+            cef_focus_browser(playerid, INTERFACE_BROWSER_ID, true);
         }
         else
         {
@@ -280,32 +253,17 @@ public authDelayedCharacterAttachProp(playerid)
     return 1;
 }
 
-// =============================================================================
-// Character Creation
-// =============================================================================
-
-forward authDelayedCharacterCreate(playerid);
-public authDelayedCharacterCreate(playerid)
-{
-    cef_emit_event(playerid, "ui:showcreatecharacter", CEFSTR("true"));
-    cef_focus_browser(playerid, INTERFACE_BROWSER_ID, true);
-    return 1;
-}
-
 forward authOnCreateCharacter(playerid, const arguments[]);
 public authOnCreateCharacter(playerid, const arguments[])
 {
-    // Parse character creation data
     sscanf(arguments, "p<|>s[64]s[16]s[16]s[7]", 
         pUserD[playerid][pdBirtDay], 
         pUserD[playerid][pdFirstName], 
         pUserD[playerid][pdLastName], 
         pUserD[playerid][pdGender]);
     
-    // Calculate age from birthday
     pUserD[playerid][pdAge] = calculateAgeFromDate(pUserD[playerid][pdBirtDay]);
     
-    // Update character data
     new query[256];
     mysql_format(g_SQL, query, sizeof(query), 
         "UPDATE `krakterdata` SET `firstname` = '%s', `lastname` = '%s', `birthday` = '%s', `age` = %d, `sex` = '%s' WHERE `identifier` = '%s'", 
@@ -322,7 +280,6 @@ public authOnCharacterDataUpdate(playerid)
 {
     pUser[playerid][pActive] = 1;
     
-    // Activate character
     new query[256];
     mysql_format(g_SQL, query, sizeof(query), 
         "UPDATE `krakter` SET `ative` = 1 WHERE `identifier` = '%s'", 
@@ -334,7 +291,6 @@ public authOnCharacterDataUpdate(playerid)
 forward authOnCharacterActivated(playerid);
 public authOnCharacterActivated(playerid)
 {
-    // Insert character data
     new query[256];
     mysql_format(g_SQL, query, sizeof(query), 
         "INSERT INTO `krakterdata` (`identifier`, `firstname`, `lastname`, `birthday`, `age`, `sex`) VALUES ('%s', '%s', '%s', '%s', %d, '%s')", 
@@ -347,30 +303,22 @@ public authOnCharacterActivated(playerid)
 forward authOnCharacterDataInsert(playerid);
 public authOnCharacterDataInsert(playerid)
 {
-    // Set player properties for new character
     SetPlayerInterior(playerid, pUserD[playerid][pdVirtualID]);
     SetPlayerVirtualWorld(playerid, pUserD[playerid][pdWorldID]);
     SetPlayerSkin(playerid, 1);
     SetPlayerPos(playerid, -2415.8567, -593.8060, 132.7245);
     SetCameraBehindPlayer(playerid);
     
-    // Show skin selection menu
     showSkinMenu(playerid);
     return 1;
 }
 
-// =============================================================================
-// Player Disconnect Handling
-// =============================================================================
-
 stock authOnPlayerDisconnect(playerid)
 {
-    // Save current player position and status
     GetPlayerPos(playerid, pUserD[playerid][pdPos][0], pUserD[playerid][pdPos][1], pUserD[playerid][pdPos][2]);
     GetPlayerHealth(playerid, pUserD[playerid][pdHealth]);
     GetPlayerArmour(playerid, pUserD[playerid][pdArmour]);
     
-    // Update character data in database
     new cQuery[2500];
     mysql_format(g_SQL, cQuery, sizeof(cQuery), 
         "UPDATE `krakterdata` SET \
