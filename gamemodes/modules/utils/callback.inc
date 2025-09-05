@@ -58,6 +58,7 @@ public void:OnPlayerKeyUp(player, key)
     if(key == 113)
     {
         cef_emit_event(player, "openInventory", CEFSTR(pUser[player][pIdentifier]));
+        showRightInventory(player, "drop");
         cef_focus_browser(player, INTERFACE_BROWSER_ID, true);
     }
 

@@ -49,3 +49,13 @@ stock SetPlayerDrunkEffect(playerid, level)
     pUserD[playerid][pDrunkEffect] = true;
     return 1;
 }
+
+
+
+stock Is3DPointInRangeOfPoint(Float:x, Float:y, Float:z, Float:x2, Float:y2, Float:z2, Float:range)
+{
+    x2 -= x;
+    y2 -= y;
+    z2 -= z;
+    return ((x2 * x2) + (y2 * y2) + (z2 * z2)) < (range * range);
+}

@@ -3,6 +3,7 @@ stock AddItemToInventory(playerid, itemid, amount) {
     {
         if(PlayerInventory[playerid][i][pInvItemIndex] == itemid)
         {
+            PlayerInventory[playerid][i][pInvAmount] += amount;
             new query[250];
             mysql_format(g_SQL, query, sizeof(query), "UPDATE `krakterinventory` SET `amount` = %d WHERE `identifier` = '%s' AND `slot` = %d", PlayerInventory[playerid][i][pInvAmount], pUser[playerid][pIdentifier], i);
             mysql_tquery(g_SQL, query, "OnInventoryAdd", "idddd", playerid, i, itemid, amount, 0);
@@ -23,8 +24,6 @@ stock AddItemToInventory(playerid, itemid, amount) {
 
 forward OnInventoryAdd(playerid, slot, itemid, amount, type);
 public OnInventoryAdd(playerid, slot, itemid, amount, type) {
-    PlayerInventory[playerid][slot][pInvItemIndex] = itemid;
-    PlayerInventory[playerid][slot][pInvAmount] = amount;
     if(type == 1)
     {
         Iter_Add(PlayerInventory<playerid>, slot);
@@ -33,3 +32,11 @@ public OnInventoryAdd(playerid, slot, itemid, amount, type) {
     ShowNotification(playerid, "default", "Inventory", "Berhasil menambahkan item ke inventory", "success", 5000);
 }
 
+stock showRightInventory(playerid, const type[])
+{
+    new json[256], Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+    format(json, sizeof(json), "{\"x\": %f, \"y\": %f, \"z\": %f, \"identifier\": \"%s\", \"type\": \"%s\"}",
+        x, y, z, pUser[playerid][pIdentifier], type);
+    cef_emit_event(playerid, "openInventoryRight", CEFSTR(json));
+}

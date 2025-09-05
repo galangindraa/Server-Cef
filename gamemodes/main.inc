@@ -39,6 +39,10 @@ public OnGameModeInit()
 {
     DatabaseConnection();
     
+    new qury[256];
+    mysql_format(g_SQL, qury, sizeof(qury), "DELETE FROM `inventorydrop`");
+    mysql_tquery(g_SQL, qury);
+
     cef_subscribe("ui:exit", "uiOnExit");
 
     cef_subscribe("ui:createCharacter", "authOnCreateCharacter");
@@ -54,6 +58,12 @@ public OnGameModeInit()
     cef_subscribe("ui:updateSkinList", "skinOnpdateSkinList");
     cef_subscribe("ui:saveOutfitList", "skinOnSaveOutfitList");
     cef_subscribe("ui:deleteSkinList", "skinOnDeleteSkinList");
+
+    cef_subscribe("inventory:swapItems", "invOnSwapItems");
+    cef_subscribe("inventory:useItem", "invOnUseItem");
+    cef_subscribe("inventory:giveItem", "invOnGiveItem");
+    cef_subscribe("inventory:dropItem", "invOnDropItem");
+    cef_subscribe("inventory:takeItem", "invOnTakeItem");
     return 1;
 }
 
