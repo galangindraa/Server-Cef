@@ -99,7 +99,8 @@
             "crashdetect",
             "cef",
             "mysql",
-            "streamer"
+            "streamer",
+            "requests"
         ],
         "main_scripts": [
             "main 1"

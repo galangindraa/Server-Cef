@@ -107,9 +107,12 @@ CMD:giveitem(playerid, params[]) {
 
     forex(i, sizeof(Items))
     {
-        if(strcmp(itemname, Items[i][itemName], true) == 0)
+        printf("[DEBUG] Comparing %s with %s", itemname, Items[i][itemName]);
+        if(!strcmp(itemname, Items[i][itemName]))
         {
+            printf("[DEBUG] Item found: %s", Items[i][itemName]);
             AddItemToInventory(targetid, Items[i][itemID], amount);
+            break;
         }
     }
     return 1;

@@ -1,15 +1,18 @@
 #define MAX_INVENTORY_SLOTS 42
+#define MAX_ITEM_DEFS (256)
 
 enum E_ITEM {
     itemID,
     itemName[64],
-    Float:itemWeight
+    itemLabel[64],
+    Float:itemWeight,
+    useHunger,
+    useThirst,
+    useAnimDict[64],
+    useAnimLib[64]
 };
 
-new const Items[][E_ITEM] = {
-    {0,"burger", 1.0},
-    {1,"water", 1.0}
-};
+new Items[MAX_ITEM_DEFS][E_ITEM];
 
 enum E_PLAYER_INVENTORY {
     pInvItemIndex,

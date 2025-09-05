@@ -55,6 +55,54 @@ public void:OnPlayerKeyUp(player, key)
 	format(buffer, sizeof(buffer), "KeyUp: %d", key);
 	SendClientMessage(player, -1, buffer);
 
+    if(key == 49)
+    {
+        if(PlayerInventory[player][0][pInvItemIndex] != -1)
+        {
+            useItem(player, PlayerInventory[player][0][pInvItemIndex]);
+        }
+    }
+
+    if(key == 50)
+    {
+        if(PlayerInventory[player][1][pInvItemIndex] != -1)
+        {
+            useItem(player, PlayerInventory[player][1][pInvItemIndex]);
+        }
+    }
+    if(key == 51)
+    {
+        if(PlayerInventory[player][2][pInvItemIndex] != -1)
+        {
+            useItem(player, PlayerInventory[player][2][pInvItemIndex]);
+        }
+    }
+    if(key == 52)
+    {
+        if(PlayerInventory[player][3][pInvItemIndex] != -1)
+        {
+            useItem(player, PlayerInventory[player][3][pInvItemIndex]);
+        }
+    }
+    if(key == 53)
+    {
+        if(PlayerInventory[player][4][pInvItemIndex] != -1)
+        {
+            useItem(player, PlayerInventory[player][4][pInvItemIndex]);
+        }
+    }
+
+    if(key == 54)
+    {
+        if(PlayerInventory[player][4][pInvItemIndex] != -1)
+        {
+            useItem(player, PlayerInventory[player][5][pInvItemIndex]);
+        }
+    }
+
+    
+
+
     if(key == 113)
     {
         cef_emit_event(player, "openInventory", CEFSTR(pUser[player][pIdentifier]));

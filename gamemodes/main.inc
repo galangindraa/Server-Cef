@@ -16,6 +16,8 @@
 #include <KeyListener>
 #include <streamer>
 
+#include <requests>
+
 #define INTERFACE_BROWSER_ID             0xABCDE
 #define INTERFACE_BROWSER_URL            "http://localhost:3000"
 
@@ -29,14 +31,17 @@ new gTimerInVehicleUpdate[MAX_PLAYERS] = {0, ...};
 new Float:gPreviousVehicleSpeed[MAX_PLAYERS] = {0.0, ...};
 
 #include "modules/include"
-
 main()
 {
-    // Main function - called when gamemode starts
+    new RequestsClient:clientSocket = RequestsClient("http://localhost:3001/");
+    RequestJSON(clientSocket, "getitemlist", HTTP_METHOD_GET, "OnReceiveRequestData", .headers = RequestHeaders());
+    printf("[init] Requests socket: %i, validity check: %i", _:clientSocket, IsValidRequestsClient(clientSocket));
+
 }
 
 public OnGameModeInit()
 {
+
     DatabaseConnection();
     
     new qury[256];
@@ -69,6 +74,7 @@ public OnGameModeInit()
 
 public OnPlayerConnect(playerid)
 {
+    PreloadAnimLibs(playerid);
     SetSpawnInfo(playerid, NO_TEAM, 1, -2415.8567, -593.8060, 132.7245, 259.7749, 
         t_WEAPON:0, 0, t_WEAPON:0, 0, t_WEAPON:0, 0);
     SpawnPlayer(playerid);  
@@ -124,5 +130,70 @@ forward uiOnExit(player_id);
 public uiOnExit(player_id)
 {
     cef_focus_browser(player_id, INTERFACE_BROWSER_ID, false);
+    return 1;
+}
+
+forward OnReceiveRequestData(Request:id, E_HTTP_STATUS:status, Node:node);
+public OnReceiveRequestData(Request:id, E_HTTP_STATUS:status, Node:node)
+{
+    printf("[requests] Callback fired. id:%d status:%d", _:id, _:status);
+    if (status != HTTP_STATUS_OK)
+    {
+        printf("[requests] Non-OK status: %d. Aborting parse.", _:status);
+        return 1;
+    }
+    new Node:items;
+    JsonGetObject(node, "items", items);
+    new len;
+    JsonArrayLength(items, len);
+    printf("[requests] Items count: %d", len);
+    printf("[requests] ---- Items Detail ----");
+
+    for (new i = 0; i < len; i++)
+    {
+        if (i >= MAX_ITEM_DEFS)
+        {
+            printf("[requests] Reached MAX_ITEM_DEFS limit (%d), stopping.", MAX_ITEM_DEFS);
+            break;
+        }
+        new Node:item;
+        JsonArrayObject(items, i, item);
+
+        new animJson[128];
+        JsonStringify(item, animJson, sizeof(animJson));
+        printf("[requests] Item %d: %s", i, animJson);
+
+
+        new itemId;
+        new name[64];
+        new label[64];
+        new Float:weight;
+
+        JsonGetInt(item, "id", itemId);
+        JsonGetString(item, "name", name, 64);
+        JsonGetString(item, "label", label, 64);
+        JsonGetFloat(item, "weight", weight);
+
+        new Node:output;
+        JsonGetObject(item, "use", output);
+        new dict[64], lib[64];
+        JsonGetString(output, "dict", dict, 64);
+        JsonGetString(output, "lib", lib, 64);
+        new Node:statusObj;
+        JsonGetObject(output, "status", statusObj);
+        new hunger, thirst;
+        JsonGetInt(statusObj, "hunger", hunger);
+        JsonGetInt(statusObj, "thirst", thirst);
+
+        Items[i][itemID] = itemId;
+        Items[i][itemName] = name;
+        Items[i][itemWeight] = weight; 
+        Items[i][useHunger] = hunger;
+        Items[i][useThirst] = thirst;
+        Items[i][useAnimDict] = dict;
+        Items[i][useAnimLib] = lib;
+        printf("[requests] #%d | id:%d | name:%s | label:%s | weight:%.2f | hunger:%d | thirst:%d | dict:%s | lib:%s", i + 1, itemId, name, label, weight, hunger, thirst, dict, lib);
+    }
+    printf("[requests] -----------------------");
     return 1;
 }

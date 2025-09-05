@@ -26,6 +26,8 @@ forward OnInventoryAdd(playerid, slot, itemid, amount, type);
 public OnInventoryAdd(playerid, slot, itemid, amount, type) {
     if(type == 1)
     {
+        PlayerInventory[playerid][slot][pInvItemIndex] = itemid;
+        PlayerInventory[playerid][slot][pInvAmount] = amount;
         Iter_Add(PlayerInventory<playerid>, slot);
     }
 
@@ -39,4 +41,37 @@ stock showRightInventory(playerid, const type[])
     format(json, sizeof(json), "{\"x\": %f, \"y\": %f, \"z\": %f, \"identifier\": \"%s\", \"type\": \"%s\"}",
         x, y, z, pUser[playerid][pIdentifier], type);
     cef_emit_event(playerid, "openInventoryRight", CEFSTR(json));
+}
+
+stock useItem(playerid, slot) 
+{
+    if(Items[slot][useHunger] >= 1)
+    {
+        pUserD[playerid][pdHunger] += Items[slot][useHunger];
+        if(pUserD[playerid][pdHunger] >= 100) return 0;
+        SetPlayerAttachedObject(playerid, 9, 1546, 6, 0.038, 0.014, 0.031, 0.000, 0.000, 0.000, 1.000, 1.000, 1.000);
+        ApplyAnimation(playerid, Items[slot][useAnimDict], Items[slot][useAnimLib], 4.1, false, false, false, false, false, SYNC_ALL);
+        SetTimerEx("ClearAttachedObject", 2500, false, "d", playerid);
+    }
+
+    if(Items[slot][useThirst] >= 1)
+    {
+        if(pUserD[playerid][pdThirst] >= 100) return 0;
+        pUserD[playerid][pdThirst] += Items[slot][useThirst];
+        SetPlayerAttachedObject(playerid, 9, 1546, 6, 0.038, 0.014, 0.031, 0.000, 0.000, 0.000, 1.000, 1.000, 1.000);
+        ApplyAnimation(playerid, Items[slot][useAnimDict], Items[slot][useAnimLib], 4.1, false, false, false, false, false, SYNC_ALL);
+        SetTimerEx("ClearAttachedObject", 2500, false, "d", playerid);
+
+    }
+
+    return 1;
+}
+
+forward ClearAttachedObject(playerid);
+public ClearAttachedObject(playerid)
+{
+    RemovePlayerAttachedObject(playerid, 9);
+    ClearAnimations(playerid, SYNC_ALL);
+    ApplyAnimation(playerid, "CARRY", "crry_prtial", 4.1, false, false, false, false, false, SYNC_ALL);
+    return 1;
 }

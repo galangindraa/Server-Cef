@@ -61,22 +61,13 @@ public invOnUseItem(playerid, const arguments[])
     new itemIndex = PlayerInventory[playerid][itemslot][pInvItemIndex];
 
     if(itemIndex == -1) return 0;
-    
-    if(itemIndex == 0)
-    {
-        ShowNotification(playerid, "default", "Inventory", "Use Burgger", "inform", 5000);
-    }
-    else if(itemIndex == 1)
-    {
-        ShowNotification(playerid, "default", "Inventory", "Use Water", "inform", 5000);
-    }
+    useItem(playerid, itemIndex);
     return 1;
 }
 
 forward invOnDropItem(playerid, const arguments[]);
 public invOnDropItem(playerid, const arguments[])
 {
-    printf("invOnDropItem: %s", arguments);
     new slot, amount;
     sscanf(arguments, "p<|>dd", slot, amount);
     new itemIndex = PlayerInventory[playerid][slot][pInvItemIndex];
@@ -158,7 +149,6 @@ public invOnTakeItem(playerid, const arguments[])
 {
     new itemid, amount;
     sscanf(arguments, "p<|>dd", itemid, amount);
-    printf("invOnTakeItem: %d, %d", itemid, amount);
     new query[256];
     mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `inventorydrop` WHERE `item` = %d", itemid);
     mysql_pquery(g_SQL, query, "OnTakeItemFromWorld", "idd", playerid, itemid, amount);
@@ -188,7 +178,6 @@ public OnTakeItemFromWorld(playerid, itemid, amount)
 
             if(Is3DPointInRangeOfPoint(x, y, z, dx, dy, dz, range))
             {
-                printf("OnTakeItemFromWorld: %d, %d", itemid, amount);
                 new totalammount = dbAmount - amount;
                 if((dbAmount -= amount) <= 0)
                 {
@@ -209,7 +198,6 @@ public OnTakeItemFromWorld(playerid, itemid, amount)
 forward OnWorldItemCreatedTaken(playerid, itemid, amount);
 public OnWorldItemCreatedTaken(playerid, itemid, amount)
 {
-    printf("OnWorldItemCreatedTaken: %d, %d", itemid, amount);
     AddItemToInventory(playerid, itemid, amount);
     cef_emit_event(playerid, "inventory:updateInventory", CEFSTR(pUser[playerid][pIdentifier]));
     showRightInventory(playerid, "drop");
